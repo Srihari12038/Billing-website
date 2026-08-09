@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h1>Expenses</h1>
+  <div class="d-flex gap-2">
+    <a class="btn btn-light" href="{% url 'expense_category_list' %}">Categories</a>
+    <a class="btn btn-primary" href="{% url 'expense_add' %}"><i class="bi bi-plus-lg"></i> Add Expense</a>
+  </div>
+</div>
+
+<div class="panel table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Method</th>
+        <th class="text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for expense in object_list %}
+      <tr>
+        <td>{{ expense.expense_date }}</td>
+        <td>{{ expense.title }}</td>
+        <td>{{ expense.category.name }}</td>
+        <td>&#8377;{{ expense.amount }}</td>
+        <td>{{ expense.payment_method }}</td>
+        <td class="text-end">
+          <div class="d-inline-flex gap-1">
+            <a class="btn btn-sm btn-light" href="{% url 'expense_edit' expense.pk %}" title="Edit expense">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <a class="btn btn-sm btn-light text-danger" href="{% url 'expense_delete' expense.pk %}" title="Delete expense">
+              <i class="bi bi-trash"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-muted">No expenses.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

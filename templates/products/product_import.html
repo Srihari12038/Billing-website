@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<div class="page-head"><h1>Import Products</h1></div><form method="post" enctype="multipart/form-data" class="panel">{% csrf_token %}<input class="form-control" type="file" name="file" accept=".xlsx" required><button class="btn btn-primary mt-3">Import Excel</button></form>{% endblock %}

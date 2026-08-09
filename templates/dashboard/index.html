@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Sales, inventory, and cashflow snapshot.</p>
+  </div>
+  <a class="btn btn-primary" href="{% url 'sale_add' %}"><i class="bi bi-plus-lg"></i> New Invoice</a>
+</div>
+
+<h2 class="snapshot-title">Sales Snapshot</h2>
+<div class="metric-grid">
+  <div class="metric"><span>Total Expenses</span><strong>&#8377;{{ total_expense }}</strong><i class="bi bi-wallet2 text-warning"></i></div>
+  <div class="metric"><span>Monthly Sales</span><strong>&#8377;{{ monthly_sales }}</strong><i class="bi bi-calendar2-check text-success"></i></div>
+  <div class="metric"><span>Monthly Profit</span><strong>&#8377;{{ monthly_profit_amount }}</strong><i class="bi bi-bar-chart-line text-primary"></i></div>
+</div>
+
+<div class="metric-grid mt-3">
+  <div class="metric"><span>Invoices</span><strong>{{ invoice_count }}</strong><i class="bi bi-receipt text-primary"></i></div>
+  <div class="metric"><span>Total Sale Qty</span><strong>{{ total_sale_qty }}</strong><i class="bi bi-bag-check text-success"></i></div>
+  <div class="metric"><span>Today's Item Cost</span><strong>&#8377;{{ today_cogs }}</strong><i class="bi bi-tags text-warning"></i></div>
+  <div class="metric"><span>Monthly Item Cost</span><strong>&#8377;{{ monthly_cogs }}</strong><i class="bi bi-calculator text-warning"></i></div>
+</div>
+
+<h2 class="snapshot-title">Inventory Snapshot</h2>
+<div class="metric-grid">
+  <div class="metric"><span>Products</span><strong>{{ product_count }}</strong><i class="bi bi-box-seam text-warning"></i></div>
+  <div class="metric"><span>Total Stock Qty</span><strong>{{ total_stock }}</strong><i class="bi bi-boxes text-primary"></i></div>
+  <div class="metric"><span>Stock Cost Value</span><strong>&#8377;{{ inventory_cost_value }}</strong><i class="bi bi-clipboard-data text-success"></i></div>
+  <div class="metric"><span>Low Stock</span><strong>{{ low_stock_count }}</strong><i class="bi bi-exclamation-triangle text-danger"></i></div>
+</div>
+
+<h2 class="snapshot-title">Cashflow Snapshot</h2>
+<div class="metric-grid">
+  <div class="metric"><span>Cash In Today</span><strong>&#8377;{{ today_cash_in }}</strong><i class="bi bi-arrow-down-circle text-success"></i></div>
+  <div class="metric"><span>Expense Today</span><strong>&#8377;{{ today_expense }}</strong><i class="bi bi-wallet2 text-warning"></i></div>
+  <div class="metric"><span>{{ today_cashflow_label }} Today</span><strong>&#8377;{{ today_cashflow_amount }}</strong><i class="bi bi-cash-coin text-primary"></i></div>
+  <div class="metric"><span>Pending Receivables</span><strong>&#8377;{{ pending_payments }}</strong><i class="bi bi-hourglass-split text-danger"></i></div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-xl-8">
+    <div class="panel">
+      <h2>Sales & Expenses</h2>
+      <canvas id="salesExpenseChart" height="120"></canvas>
+    </div>
+  </div>
+  <div class="col-xl-4">
+    <div class="panel">
+      <h2>Top Products</h2>
+      {% for item in top_products %}
+      <div class="list-line"><span>{{ item.product__name }}</span><strong>{{ item.quantity }}</strong></div>
+      {% empty %}
+      <p class="text-muted">No sales yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="col-xl-8">
+    <div class="panel table-responsive">
+      <h2>Latest Orders</h2>
+      <table class="table">
+        <thead><tr><th>Invoice</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for sale in latest_orders %}
+        <tr>
+          <td><a href="{{ sale.get_absolute_url }}">{{ sale.invoice_number }}</a></td>
+          <td>{{ sale.customer.name }}</td>
+          <td>{{ sale.invoice_date }}</td>
+          <td>&#8377;{{ sale.grand_total }}</td>
+          <td><span class="badge text-bg-success">{{ sale.status }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-muted">No orders.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-xl-4">
+    <div class="panel">
+      <h2>Recent Customers</h2>
+      {% for customer in recent_customers %}
+      <div class="list-line"><span>{{ customer.name }}</span><a href="{{ customer.get_absolute_url }}">View</a></div>
+      {% empty %}
+      <p class="text-muted">No customers.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{{ chart_labels|json_script:"chart-labels" }}{{ sales_data|json_script:"sales-data" }}{{ expense_data|json_script:"expense-data" }}
+{% endblock %}

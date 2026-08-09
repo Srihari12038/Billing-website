@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head"><h1>Products</h1><div><a class="btn btn-light" href="{% url 'product_import' %}"><i class="bi bi-upload"></i> Import</a><a class="btn btn-light" href="{% url 'product_export' %}"><i class="bi bi-download"></i> Export</a><a class="btn btn-primary" href="{% url 'product_add' %}"><i class="bi bi-plus-lg"></i> Add Product</a></div></div>
+<form method="post" action="{% url 'product_bulk_delete' %}" class="panel table-responsive">{% csrf_token %}
+<table class="table align-middle"><thead><tr><th><input type="checkbox" data-check-all></th><th>Product</th><th>Product Code</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr></thead><tbody>
+{% for product in object_list %}<tr><td><input type="checkbox" name="ids" value="{{ product.id }}"></td><td><a href="{{ product.get_absolute_url }}">{{ product.name }}</a>{% if product.stock_alert %}<span class="badge text-bg-danger ms-2">Low</span>{% endif %}</td><td>{{ product.sku }}</td><td>{{ product.category.name }}</td><td>₹{{ product.selling_price }}</td><td>{{ product.current_stock }}</td><td class="text-end"><a class="btn btn-sm btn-light" href="{% url 'product_edit' product.pk %}"><i class="bi bi-pencil"></i></a><a class="btn btn-sm btn-light text-danger" href="{% url 'product_delete' product.pk %}"><i class="bi bi-trash"></i></a></td></tr>{% empty %}<tr><td colspan="7" class="text-muted">No products found.</td></tr>{% endfor %}
+</tbody></table><button class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Bulk Delete</button></form>
+{% endblock %}

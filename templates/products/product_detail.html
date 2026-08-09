@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ object.name }}</h1>
+  <a class="btn btn-primary" href="{% url 'product_edit' object.pk %}">Edit</a>
+</div>
+<div class="panel">
+  <dl class="row">
+    <dt class="col-sm-3">Product Code</dt><dd class="col-sm-9"><strong>{{ object.sku }}</strong></dd>
+    <dt class="col-sm-3">Barcode</dt><dd class="col-sm-9">{{ object.barcode|default:"-" }}</dd>
+    <dt class="col-sm-3">Category</dt><dd class="col-sm-9">{{ object.category }}</dd>
+    <dt class="col-sm-3">Price</dt><dd class="col-sm-9">Rs. {{ object.selling_price }}</dd>
+    <dt class="col-sm-3">Stock</dt><dd class="col-sm-9">{{ object.current_stock }}</dd>
+    <dt class="col-sm-3">GST</dt><dd class="col-sm-9">{{ object.gst_rate }}%</dd>
+    <dt class="col-sm-3">HSN</dt><dd class="col-sm-9">{{ object.hsn_code|default:"-" }}</dd>
+  </dl>
+</div>
+{% endblock %}
